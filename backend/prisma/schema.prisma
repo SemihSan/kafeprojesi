@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 // Users table for admin, waiter, kitchen roles
@@ -15,36 +15,24 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
-  role      Role
+  role      String   // OWNER, WAITER, KITCHEN
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-enum Role {
-  OWNER
-  WAITER
-  KITCHEN
-}
-
 // Physical tables in the cafe
 model CafeTable {
-  id           String       @id @default(cuid())
-  name         String       @unique
-  status       TableStatus  @default(EMPTY)
+  id           String      @id @default(cuid())
+  name         String      @unique
+  status       String      @default("EMPTY") // EMPTY, OCCUPIED, MERGED
   // If merged, this field points to the main table id
   mergedIntoId String?
-  mergedInto   CafeTable?   @relation("MergedInto", fields: [mergedIntoId], references: [id])
-  mergedTables CafeTable[]  @relation("MergedInto")
+  mergedInto   CafeTable?  @relation("MergedInto", fields: [mergedIntoId], references: [id])
+  mergedTables CafeTable[] @relation("MergedInto")
   orders       Order[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-}
-
-enum TableStatus {
-  EMPTY
-  OCCUPIED
-  MERGED
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 // Menu categories (e.g., Drinks, Desserts)
@@ -58,48 +46,38 @@ model Category {
 
 // Products on the menu
 model Product {
-  id          String        @id @default(cuid())
-  name        String
-  priceCents  Int           // store in cents to avoid float errors
-  inStock     Boolean       @default(true)
-  categoryId  String?
-  category    Category?     @relation(fields: [categoryId], references: [id])
-  orderItems  OrderItem[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id         String      @id @default(cuid())
+  name       String
+  priceCents Int // store in cents to avoid float errors
+  inStock    Boolean     @default(true)
+  categoryId String?
+  category   Category?   @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
   @@index([name])
 }
 
 // Orders placed by tables
 model Order {
-  id           String        @id @default(cuid())
-  tableId      String
-  table        CafeTable     @relation(fields: [tableId], references: [id])
-  status       OrderStatus   @default(PENDING)
-  items        OrderItem[]
-  totalCents   Int           @default(0)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-}
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  PREPARING
-  READY
-  SERVED
-  CANCELLED
+  id         String      @id @default(cuid())
+  tableId    String
+  table      CafeTable   @relation(fields: [tableId], references: [id])
+  status     String      @default("PENDING") // PENDING, CONFIRMED, PREPARING, READY, SERVED, CANCELLED
+  items      OrderItem[]
+  totalCents Int         @default(0)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 // Items inside orders
 model OrderItem {
-  id         String   @id @default(cuid())
+  id         String  @id @default(cuid())
   orderId    String
-  order      Order    @relation(fields: [orderId], references: [id])
+  order      Order   @relation(fields: [orderId], references: [id])
   productId  String
-  product    Product  @relation(fields: [productId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
   quantity   Int
-  priceCents Int      // snapshot of product price at order time
+  priceCents Int // snapshot of product price at order time
 }
-
-
