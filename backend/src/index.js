@@ -13,6 +13,10 @@ import { signJwt, comparePassword } from "./auth.js";
 
 const prisma = new PrismaClient();
 const app = express();
+
+// Trust proxy for Vercel deployment
+app.set('trust proxy', 1);
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
