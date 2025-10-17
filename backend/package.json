@@ -9,7 +9,8 @@
     "seed": "node prisma/seed.js",
     "prisma": "prisma",
     "build": "prisma generate",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -29,5 +30,3 @@
     "prisma": "^5.22.0"
   }
 }
-
-
