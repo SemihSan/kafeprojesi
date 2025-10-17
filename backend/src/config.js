@@ -7,7 +7,6 @@ export const config = {
     windowMs: 60 * 1000, // 1 minute
     max: 120, // 120 requests/minute per IP
   },
-  databaseUrl: process.env.DATABASE_URL || "file:./dev.db",
 };
 
 

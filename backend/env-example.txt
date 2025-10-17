@@ -1,0 +1,17 @@
+# Environment Variables for QR Cafe Backend
+
+# Database Configuration
+# Development (SQLite)
+DATABASE_URL="file:./dev.db"
+
+# Production (PostgreSQL - Supabase)
+# DATABASE_URL="postgresql://postgres:[YOUR_PASSWORD]@db.[YOUR_PROJECT_REF].supabase.co:5432/postgres"
+
+# JWT Secret - Generate a strong random string for production!
+JWT_SECRET="dev_super_secret_change_me_in_production"
+
+# CORS Origins - Add your frontend URL for production
+CORS_ORIGINS="http://localhost:5173,http://localhost:4173"
+
+# Port (optional)
+PORT=4000

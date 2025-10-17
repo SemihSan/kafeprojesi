@@ -1,5 +1,5 @@
 // Prisma schema for QR-based Cafe Ordering System
-// SQLite datasource; can be swapped to PostgreSQL/MySQL later
+// Default: SQLite for development, override with DATABASE_URL for production
 
 generator client {
   provider = "prisma-client-js"
@@ -49,7 +49,8 @@ model Product {
   id         String      @id @default(cuid())
   name       String
   priceCents Int // store in cents to avoid float errors
-  inStock    Boolean     @default(true)
+  quantity   Int         @default(0) // stock quantity
+  minStock   Int         @default(5) // minimum stock level for alerts
   categoryId String?
   category   Category?   @relation(fields: [categoryId], references: [id])
   orderItems OrderItem[]

@@ -25,17 +25,17 @@ async function main() {
   await prisma.product.upsert({
     where: { id: "seed-espresso" },
     update: {},
-    create: { id: "seed-espresso", name: "Espresso", priceCents: 4500, categoryId: drinks.id },
+    create: { id: "seed-espresso", name: "Espresso", priceCents: 4500, quantity: 50, minStock: 10, categoryId: drinks.id },
   });
   await prisma.product.upsert({
     where: { id: "seed-latte" },
     update: {},
-    create: { id: "seed-latte", name: "Latte", priceCents: 5500, categoryId: drinks.id },
+    create: { id: "seed-latte", name: "Latte", priceCents: 5500, quantity: 30, minStock: 8, categoryId: drinks.id },
   });
   await prisma.product.upsert({
     where: { id: "seed-cheesecake" },
     update: {},
-    create: { id: "seed-cheesecake", name: "Cheesecake", priceCents: 7500, categoryId: foods.id },
+    create: { id: "seed-cheesecake", name: "Cheesecake", priceCents: 7500, quantity: 15, minStock: 3, categoryId: foods.id },
   });
 
   console.log("Seeded:", { owner: owner.email, tables: tables.length });

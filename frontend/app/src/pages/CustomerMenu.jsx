@@ -6,6 +6,8 @@ import { useCart } from '../store/useCart'
 export default function CustomerMenu() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showTableIdModal, setShowTableIdModal] = useState(false)
+  const [manualTableId, setManualTableId] = useState('')
   const { search } = useLocation()
   const navigate = useNavigate()
   const sp = new URLSearchParams(search)
@@ -26,7 +28,7 @@ export default function CustomerMenu() {
 
   async function submitOrder() {
     if (!cart.tableId) {
-      alert('Masa bilgisi bulunamadı. QR ile geliniz veya ?tableId=... ekleyiniz.')
+      setShowTableIdModal(true)
       return
     }
     if (cart.items.length === 0) return
@@ -36,14 +38,38 @@ export default function CustomerMenu() {
     }
     const res = await api.post('/orders', payload)
     cart.clear()
-    navigate(`/status/${res.data.order.id}`)
+    navigate(`/order-status/${res.data.order.id}`)
+  }
+
+  function handleManualTableIdSubmit() {
+    if (manualTableId.trim()) {
+      cart.setTableId(manualTableId.trim())
+      setShowTableIdModal(false)
+      setManualTableId('')
+    }
   }
 
   if (loading) return <div className="p-6">Yükleniyor...</div>
 
   return (
     <div className="p-4 space-y-6">
-      <h1 className="text-2xl font-bold">Menü</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Menü</h1>
+        {cart.tableId && (
+          <div className="text-sm text-gray-600">
+            Masa: {cart.tableId}
+          </div>
+        )}
+      </div>
+
+      {!cart.tableId && (
+        <div className="p-3 bg-yellow-100 border border-yellow-400 rounded">
+          <p className="text-sm text-yellow-800">
+            Masa bilgisi bulunamadı. QR kodu tarayın veya masa numarasını manuel girin.
+          </p>
+        </div>
+      )}
+
       {categories.map(cat => (
         <div key={cat.id} className="space-y-3">
           <h2 className="text-xl font-semibold">{cat.name}</h2>
@@ -63,6 +89,41 @@ export default function CustomerMenu() {
 
       <Cart />
       <button onClick={submitOrder} className="w-full py-3 bg-green-600 text-white rounded disabled:opacity-50" disabled={cart.items.length===0}>Sipariş Ver</button>
+
+      {/* Table ID Modal */}
+      {showTableIdModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-4">Masa Numarası</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Sipariş verebilmek için masa numarasını giriniz:
+            </p>
+            <input
+              type="text"
+              value={manualTableId}
+              onChange={(e) => setManualTableId(e.target.value)}
+              placeholder="örn: 5, A1, vb."
+              className="w-full px-3 py-2 border border-gray-300 rounded mb-4"
+              onKeyPress={(e) => e.key === 'Enter' && handleManualTableIdSubmit()}
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowTableIdModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded"
+              >
+                İptal
+              </button>
+              <button
+                onClick={handleManualTableIdSubmit}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+                disabled={!manualTableId.trim()}
+              >
+                Tamam
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
