@@ -8,8 +8,8 @@
     "dev": "nodemon src/index.js",
     "seed": "node prisma/seed.js",
     "prisma": "prisma",
-    "build": "prisma generate",
-    "start": "node src/index.js",
+    "build": "echo 'Build completed'",
+    "start": "npx prisma generate && node src/index.js",
     "prisma:generate": "npx prisma generate",
     "vercel-build": "npx prisma generate && npx prisma db push"
   },
