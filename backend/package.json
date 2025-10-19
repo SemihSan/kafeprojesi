@@ -8,9 +8,10 @@
     "dev": "nodemon src/index.js",
     "seed": "node prisma/seed.js",
     "prisma": "prisma",
-    "build": "prisma generate",
+    "build": "npx prisma generate",
     "start": "node src/index.js",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "vercel-build": "npx prisma generate && npx prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
