@@ -8,8 +8,11 @@ import TableManagement from './pages/TableManagement'
 import Reports from './pages/Reports'
 import AdminOrderDetails from './pages/AdminOrderDetails'
 import StockManagement from './pages/StockManagement'
+import QRCodeDisplay from './pages/QRCodeDisplay'
+import QRVerify from './pages/QRVerify'
 import HeroSection from './components/HeroSection'
 import Button from './components/Button'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -18,12 +21,14 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/menu/:tableId" element={<CustomerMenu />} />
         <Route path="/order-status/:orderId" element={<OrderStatus />} />
+        <Route path="/qr/:token" element={<QRVerify />} />
         <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/tables" element={<TableManagement />} />
-        <Route path="/admin/stock" element={<StockManagement />} />
-        <Route path="/admin/reports" element={<Reports />} />
-        <Route path="/admin/order/:orderId" element={<AdminOrderDetails />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/tables" element={<ProtectedRoute><TableManagement /></ProtectedRoute>} />
+        <Route path="/admin/qr-codes" element={<ProtectedRoute><QRCodeDisplay /></ProtectedRoute>} />
+        <Route path="/admin/stock" element={<ProtectedRoute><StockManagement /></ProtectedRoute>} />
+        <Route path="/admin/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+        <Route path="/admin/order/:orderId" element={<ProtectedRoute><AdminOrderDetails /></ProtectedRoute>} />
       </Routes>
     </div>
   )
