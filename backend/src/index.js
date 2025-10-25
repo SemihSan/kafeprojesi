@@ -8,7 +8,7 @@ import { Server } from "socket.io";
 import { config } from "./config.js";
 import { publicRouter } from "./routes/public.js";
 import { adminRouter } from "./routes/admin.js";
-import qrRoutes from "./routes/qr.js";
+// import qrRoutes from "./routes/qr.js"; // Geçici olarak kapatıldı
 import { PrismaClient } from "@prisma/client";
 import { signJwt, comparePassword } from "./auth.js";
 
@@ -73,8 +73,8 @@ app.post("/api/admin/login", async (req, res) => {
 // Admin routes
 app.use("/api/admin", adminRouter);
 
-// QR routes
-app.use("/api/qr", qrRoutes);
+// QR routes - Geçici olarak kapatıldı
+// app.use("/api/qr", qrRoutes);
 
 // Vercel serverless için
 export default app;
