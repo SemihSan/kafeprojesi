@@ -1,5 +1,5 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 // JWT Secret - Production'da environment variable olmalı
@@ -141,4 +141,4 @@ router.post('/generate-all-tokens', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
