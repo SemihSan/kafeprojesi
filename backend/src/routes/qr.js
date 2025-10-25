@@ -141,4 +141,4 @@ router.post('/generate-all-tokens', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
