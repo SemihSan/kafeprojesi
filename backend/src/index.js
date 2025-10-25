@@ -8,7 +8,7 @@ import { Server } from "socket.io";
 import { config } from "./config.js";
 import { publicRouter } from "./routes/public.js";
 import { adminRouter } from "./routes/admin.js";
-import qrRoutes from "./routes/qr.js";
+const qrRoutes = require("./routes/qr.js");
 import { PrismaClient } from "@prisma/client";
 import { signJwt, comparePassword } from "./auth.js";
 
